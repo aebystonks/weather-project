@@ -49,7 +49,6 @@ function splitFunction(temp, name, icon) {
 addFavouriteCity.addEventListener('click', () => {
 	addCity(city.textContent)
 	splitElements()
-	console.log(favouriteList)
 })
 
 function splitElements() {
@@ -63,13 +62,31 @@ function splitElements() {
 		deleteIcon.className = 'weather__delete-city'
 		newCity.append(deleteIcon)
 		favouriteCities.append(newCity)
+
+		deleteIcon.addEventListener('click', () => {
+			favouriteList = favouriteList.filter((item, idx) => idx !== index)
+			splitElements()
+		})
+
+		let currentCity = document.querySelectorAll('.weather__city')
+		currentCity.forEach(city => {
+			city.addEventListener('click', () => {
+				getCity(city.textContent).then(response => {
+					splitFunction(
+						response.main.temp,
+						response.name,
+						response.weather[0].icon
+					)
+				})
+			})
+		})
 	})
 }
 
 function addCity(newCity) {
-	favouriteList.push(newCity)
+	if (!favouriteList.includes(newCity)) {
+		favouriteList.push(newCity)
+	} else {
+		alert(new Error('Country is already exist'))
+	}
 }
-
-deleteIcon.addEventListener('click', () => {
-	alert('deleted')
-})
